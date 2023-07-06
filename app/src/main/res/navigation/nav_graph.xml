@@ -1,0 +1,26 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph">
+
+    <fragment
+        android:id="@+id/crimeListFragment"
+        android:name="com.example.finallab.CrimeListFragment"
+        android:label="crime_list_fragment"
+        tools:layout="@layout/fragment_crime_list">
+        <action
+            android:id="@+id/showCrimeDetail"
+            app:destination="@id/crimeDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crimeDetailFragment"
+        android:name="com.example.finallab.CrimeDetailFragment"
+        android:label="crime_detail_fragment"
+        tools:layout="@layout/fragment_crime_detail">
+        <argument
+            android:name="crime"
+            app:argType="com.example.finallab.Crime" />
+    </fragment>
+
+</navigation>
