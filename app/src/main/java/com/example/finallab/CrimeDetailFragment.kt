@@ -1,6 +1,8 @@
 package com.example.finallab
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +19,7 @@ import com.example.finallab.databinding.FragmentCrimeDetailBinding
 
 class CrimeDetailFragment : Fragment() {
     private val args: CrimeDetailFragmentArgs by navArgs()
-    private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
+    public val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
         CrimeDetailViewModelFactory(args.crime)
     }
     private var _binding: FragmentCrimeDetailBinding? = null
@@ -37,12 +39,29 @@ class CrimeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Code to interact with UI
-        // ...
+        // User interaction code
+        binding.crimeTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // No action needed before text change
+            }
 
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                crimeDetailViewModel.updateCrime { it.copy(title = s.toString()) }
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                // No action needed after text change
+            }
+        })
+
+        binding.crimeSolved.setOnCheckedChangeListener { _, isChecked ->
+            crimeDetailViewModel.updateCrime { it.copy(isSolved = isChecked) }
+        }
+
+        // Collecting crimeFlow
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                crimeDetailViewModel.crime.collect { crime ->
+                crimeDetailViewModel.crimeFlow.collect { crime ->
                     crime?.let { updateUi(it) }
                 }
             }
